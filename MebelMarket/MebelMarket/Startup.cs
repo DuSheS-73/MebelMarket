@@ -22,8 +22,8 @@ namespace MebelMarket
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            List<IInstaller> installers = typeof(Startup).Assembly.ExportedTypes
-                .Where(t => t.IsAssignableFrom(typeof(IInstaller)) && !t.IsInterface && !t.IsAbstract)
+            List<IInstaller> installers = typeof(Startup).Assembly.DefinedTypes
+                .Where(t => typeof(IInstaller).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
                 .Select(Activator.CreateInstance)
                 .Cast<IInstaller>()
                 .ToList();

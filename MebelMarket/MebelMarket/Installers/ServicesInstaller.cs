@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MebelMarket.DAL.Helpers;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace MebelMarket.Installers
 {
@@ -8,7 +8,7 @@ namespace MebelMarket.Installers
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
-            
+            services.AddSingleton<ConnectionHelper>();
         }
     }
 }

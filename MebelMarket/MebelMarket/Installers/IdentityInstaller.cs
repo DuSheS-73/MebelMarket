@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MebelMarket.DAL.IdentityModels;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace MebelMarket.Installers
 {
@@ -8,7 +8,19 @@ namespace MebelMarket.Installers
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
-            
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+            })
+            .AddUserStore<UserStore>()
+            .AddRoleStore<RoleStore>();
+
+            services.AddAuthentication();
+            services.AddAuthorization();
         }
     }
 }
