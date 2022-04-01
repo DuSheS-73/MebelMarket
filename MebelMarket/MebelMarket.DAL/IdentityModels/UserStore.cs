@@ -35,10 +35,10 @@ namespace MebelMarket.DAL.IdentityModels
             {
                 var query = $"INSERT INTO [AspNetUsers](" +
                     $"[Id],[UserName],[NormalizedUserName],[Email],[NormalizedEmail],[EmailConfirmed]," +
-                    $"[PasswordHash],[SecurityStamp],[ConcurrencyStamp],[PhoneNumber],[PhoneNumberConfirmed],[TwoFactorEnabled],[LockoutEnd],[LockoutEnabled],[AccessFailedCount]" +
-                    $")" +
+                    $"[PasswordHash],[SecurityStamp],[ConcurrencyStamp],[PhoneNumber],[PhoneNumberConfirmed],[TwoFactorEnabled],[LockoutEnd],[LockoutEnabled],[AccessFailedCount]," +
+                    $"[Name],[Surname])" +
                     $"VALUES(@Id,@UserName,@NormalizedUserName,@Email,@NormalizedEmail,@EmailConfirmed,@PasswordHash,@SecurityStamp,@ConcurrencyStamp,@PhoneNumber,@PhoneNumberConfirmed," +
-                    $"@TwoFactorEnabled,@LockoutEnd,@LockoutEnabled,@AccessFailedCount)";
+                    $"@TwoFactorEnabled,@LockoutEnd,@LockoutEnabled,@AccessFailedCount,@Name,@Surname)";
                 var param = new DynamicParameters();
                 param.Add("@Id", user.Id);
                 param.Add("@UserName", user.UserName);
@@ -55,6 +55,8 @@ namespace MebelMarket.DAL.IdentityModels
                 param.Add("@LockoutEnd", user.LockoutEnd);
                 param.Add("@LockoutEnabled", user.LockoutEnabled);
                 param.Add("@AccessFailedCount", user.AccessFailedCount);
+                param.Add("@Name", user.Name);
+                param.Add("@Surname", user.Surname);
                 var result = await conn.ExecuteAsync(query, param: param, commandType: CommandType.Text);
 
                 if (result > 0)
