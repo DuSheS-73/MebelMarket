@@ -40,9 +40,10 @@ namespace MebelMarket.Controllers.V1
 
         [AllowAnonymous]
         [HttpPost(ApiRoutes.Account.Login)]
-        public IActionResult LoginAsync([FromBody] UserLoginRequest loginRequest)
+        public async Task<IActionResult> LoginAsync([FromBody] UserLoginRequest request)
         {
-            return View();
+            var authResult = await _identityService.LoginAsync(request.Login, request.Password);
+            return GenerateAuthResponse(authResult);
         }
 
         private IActionResult GenerateAuthResponse(AuthenticationResult authResult)
