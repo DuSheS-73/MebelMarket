@@ -1,4 +1,5 @@
 ﻿using MebelMarket.DAL.IdentityModels;
+using MebelMarket.Models.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +22,8 @@ namespace MebelMarket.Installers
 
             services.AddAuthentication();
             services.AddAuthorization();
+
+            services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
         }
     }
 }

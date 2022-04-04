@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MebelMarket.Contracts.V1.Responses
 {
     public sealed class AuthFailedResponse
     {
-        public IEnumerable<string> Errors { get; set; }
+        public AuthFailedResponse(IEnumerable<string> errors)
+        {
+            Errors = errors;
+        }
+
+        public IEnumerable<string> Errors { get; }
     }
 }
