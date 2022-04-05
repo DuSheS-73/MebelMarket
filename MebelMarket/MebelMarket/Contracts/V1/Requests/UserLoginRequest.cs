@@ -1,8 +1,10 @@
-﻿namespace MebelMarket.Contracts.V1.Requests
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MebelMarket.Contracts.V1.Requests
 {
     public sealed class UserLoginRequest
     {
-        public string Login { get; set; }
-        public string Password { get; set; }
+        [Required] public string Login { get; set; }
+        [Required] public string Password { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace MebelMarket.Services.Implementation
         public IdentityService(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> jwtSettings)
         {
             _userManager = userManager;
+            _jwtSettings = jwtSettings.Value;
         }
 
         public async Task<ApplicationUser> GetUserByIdAsync(string id)
@@ -73,7 +74,7 @@ namespace MebelMarket.Services.Implementation
             if (!createResult.Succeeded)
                 return new AuthenticationResult(createResult.Errors.Select(x => x.Description));
 
-            var addToRoleResult = await _userManager.AddToRoleAsync(user, "User");
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, "Owner");
 
             if (!addToRoleResult.Succeeded)
                 return new AuthenticationResult(addToRoleResult.Errors.Select(x => x.Description));
@@ -88,13 +89,16 @@ namespace MebelMarket.Services.Implementation
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
+
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
