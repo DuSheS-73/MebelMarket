@@ -23,6 +23,7 @@ namespace MebelMarket.Installers
             #region Repositories
             services.AddScoped<IProductsRepository, ProductsRepository>();
             services.AddScoped<IProductFilesRepository, ProductFilesRepository>();
+            services.AddScoped<ICategoriesRepository, CategoriesRepository>();
             #endregion
         }
     }

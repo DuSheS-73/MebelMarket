@@ -11,7 +11,5 @@ namespace MebelMarket.Contracts.V1.Requests
         [Required] public string Description { get; set; }
         [Required] public decimal Price { get; set; }
         [Required] public string CategoryUid { get; set; }
-
-        public IEnumerable<IFormFile> Photos { get; set; }
     }
 }

@@ -18,12 +18,10 @@ namespace MebelMarket.Controllers.V1
     public class ProductsController : Controller
     {
         private readonly IProductsRepository _productsRepository;
-        private readonly IProductFilesRepository _productFilesRepository;
 
-        public ProductsController(IProductsRepository productsRepository, IProductFilesRepository productFilesRepository)
+        public ProductsController(IProductsRepository productsRepository)
         {
             _productsRepository = productsRepository;
-            _productFilesRepository = productFilesRepository;
         }
 
 
@@ -67,11 +65,6 @@ namespace MebelMarket.Controllers.V1
             };
 
             await _productsRepository.InsertAsync(product);
-
-            foreach (var photo in productRequest.Photos)
-            {
-                //photo.
-            }
 
             return View();
         }
