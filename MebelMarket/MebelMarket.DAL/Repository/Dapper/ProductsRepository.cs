@@ -1,36 +1,77 @@
-﻿using MebelMarket.DAL.EntityModels;
+﻿using Dapper;
+using MebelMarket.DAL.EntityModels;
+using MebelMarket.DAL.Helpers;
 using MebelMarket.DAL.Repository.Abstract;
-using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace MebelMarket.DAL.Repository.Dapper
 {
     public class ProductsRepository : IProductsRepository
     {
-        public Task DeleteAsync(string id)
+        private readonly ConnectionHelper _connectionHelper;
+
+        public ProductsRepository(ConnectionHelper connectionHelper)
         {
-            throw new NotImplementedException();
+            _connectionHelper = connectionHelper;
         }
 
-        public Task<IEnumerable<Product>> GetAllAsync()
+        public async Task<int> DeleteAsync(string uid)
         {
-            throw new NotImplementedException();
+            using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@uid", uid);
+
+                var sql = "DELETE FROM [dbo].[Products] WHERE [uid] = @uid";
+
+                return await cnn.ExecuteAsync(sql, parameters, commandType: CommandType.Text);
+            }
         }
 
-        public Task<Product> GetByIdAsync(string id)
+        public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
+            {
+                var sql = "SELECT * FROM [dbo].[Products] ORDER BY [CreationDate] DESK";
+
+                return await cnn.QueryAsync<Product>(sql, commandType: CommandType.Text);
+            }
         }
 
-        public Task InsertAsync(Product entity)
+        public async Task<Product> GetByIdAsync(string uid)
         {
-            throw new NotImplementedException();
+            using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@uid", uid);
+
+                var sql = "SELECT * FROM [dbo].[Products] WHERE [uid] = @uid";
+
+                return await cnn.QueryFirstOrDefaultAsync<Product>(sql, parameters, commandType: CommandType.Text);
+            }
         }
 
-        public Task UpdateAsync(Product entity)
+        public async Task<int> InsertAsync(Product entity)
         {
-            throw new NotImplementedException();
+            using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
+            {
+                var sql = "INSERT INTO [dbo].[Products] VALUES (NEWID(), @Name, @Description, @Price, @CategoryUid, @UserId, GETUTCDATE())";
+
+                return await cnn.ExecuteAsync(sql, entity, commandType: CommandType.Text);
+            }
+        }
+
+        public async Task<int> UpdateAsync(Product entity)
+        {
+            using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
+            {
+                var sql = "UPDATE [dbo].[Products] SET [Name] = @Name, [Description] = @Description, [Price] = @Price, [CategoryUid] = @CategoryUid WHERE [uid] = @Uid";
+
+                return await cnn.ExecuteAsync(sql, entity, commandType: CommandType.Text);
+            }
         }
     }
 }

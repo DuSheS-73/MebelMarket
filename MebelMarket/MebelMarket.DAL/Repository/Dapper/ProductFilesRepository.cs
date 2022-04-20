@@ -8,7 +8,7 @@ namespace MebelMarket.DAL.Repository.Dapper
 {
     public class ProductFilesRepository : IProductFilesRepository
     {
-        public Task DeleteAsync(string id)
+        public Task<int> DeleteAsync(string id)
         {
             throw new NotImplementedException();
         }
@@ -23,12 +23,12 @@ namespace MebelMarket.DAL.Repository.Dapper
             throw new NotImplementedException();
         }
 
-        public Task InsertAsync(ProductFile entity)
+        public Task<int> InsertAsync(ProductFile entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(ProductFile entity)
+        public Task<int> UpdateAsync(ProductFile entity)
         {
             throw new NotImplementedException();
         }

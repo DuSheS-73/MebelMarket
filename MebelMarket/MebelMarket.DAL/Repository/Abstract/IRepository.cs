@@ -8,8 +8,8 @@ namespace MebelMarket.DAL.Repository.Abstract
     {
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetByIdAsync(string id);
-        Task InsertAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(string id);
+        Task<int> InsertAsync(T entity);
+        Task<int> UpdateAsync(T entity);
+        Task<int> DeleteAsync(string id);
     }
 }

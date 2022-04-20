@@ -2,9 +2,11 @@
 using MebelMarket.Contracts.V1.Requests;
 using MebelMarket.Contracts.V1.Responses;
 using MebelMarket.DAL.EntityModels;
+using MebelMarket.DAL.IdentityModels;
 using MebelMarket.DAL.Repository.Abstract;
 using MebelMarket.Filters;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +18,12 @@ namespace MebelMarket.Controllers.V1
     public class ProductsController : Controller
     {
         private readonly IProductsRepository _productsRepository;
+        private readonly IProductFilesRepository _productFilesRepository;
 
-        public ProductsController(IProductsRepository productsRepository)
+        public ProductsController(IProductsRepository productsRepository, IProductFilesRepository productFilesRepository)
         {
             _productsRepository = productsRepository;
+            _productFilesRepository = productFilesRepository;
         }
 
 
@@ -29,9 +33,9 @@ namespace MebelMarket.Controllers.V1
             IEnumerable<Product> products = await _productsRepository.GetAllAsync();
 
             if (products == null || products.Count() == 0)
-                return Json(new DataResponse(null, new[] { "No products found" }));
+                return BadRequest(new DataResponse(null, new[] { "No products found" }));
 
-            return Json(new DataResponse(products, null));
+            return Ok(new DataResponse(products, null));
         }
 
 
@@ -41,16 +45,34 @@ namespace MebelMarket.Controllers.V1
             Product product = await _productsRepository.GetByIdAsync(id);
 
             if (product == null)
-                return Json(new DataResponse(null, new[] { "Product not found" }));
+                return BadRequest(new DataResponse(null, new[] { "Product not found" }));
 
-            return Json(new DataResponse(product, null));
+            return Ok(new DataResponse(product, null));
         }
 
 
         [CustomAuthorize]
         [HttpPost(ApiRoutes.Shared.Create)]
-        public IActionResult CreateAsync([FromBody] ProductPostRequest productRequest)
+        public async Task<IActionResult> CreateAsync([FromBody] ProductPostRequest productRequest)
         {
+            var user = (ApplicationUser)Request.HttpContext.Items["User"];
+
+            var product = new Product
+            {
+                Name = productRequest.Name,
+                Description = productRequest.Description,
+                Price = productRequest.Price,
+                CategoryUid = productRequest.CategoryId,
+                UserId = user.Id
+            };
+
+            await _productsRepository.InsertAsync(product);
+
+            foreach (var photo in productRequest.Photos)
+            {
+                //photo.
+            }
+
             return View();
         }
 
@@ -65,9 +87,10 @@ namespace MebelMarket.Controllers.V1
 
         [CustomAuthorize]
         [HttpDelete(ApiRoutes.Shared.Delete)]
-        public IActionResult DeleteAsync(string id)
+        public async Task<IActionResult> DeleteAsync(string id)
         {
-            return View();
+            await _productsRepository.DeleteAsync(id);
+            return Ok();
         }
     }
 }
