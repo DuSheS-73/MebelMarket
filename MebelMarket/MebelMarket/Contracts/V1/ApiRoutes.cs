@@ -6,11 +6,11 @@
 
         internal static class Shared
         {
-            internal const string Get = "{id}";
+            internal const string Get = "{uid}";
             internal const string GetAll = "All";
             internal const string Create = "Create";
             internal const string Update = "Update";
-            internal const string Delete = "Delete/{id}";
+            internal const string Delete = "Delete/{uid}";
         }
 
         internal static class Account

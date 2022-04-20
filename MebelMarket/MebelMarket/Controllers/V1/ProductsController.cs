@@ -40,9 +40,9 @@ namespace MebelMarket.Controllers.V1
 
 
         [HttpGet(ApiRoutes.Shared.Get)]
-        public async Task<IActionResult> GetAsync(string id)
+        public async Task<IActionResult> GetAsync(string uid)
         {
-            Product product = await _productsRepository.GetByIdAsync(id);
+            Product product = await _productsRepository.GetByIdAsync(uid);
 
             if (product == null)
                 return BadRequest(new DataResponse(null, new[] { "Product not found" }));
@@ -62,7 +62,7 @@ namespace MebelMarket.Controllers.V1
                 Name = productRequest.Name,
                 Description = productRequest.Description,
                 Price = productRequest.Price,
-                CategoryUid = productRequest.CategoryId,
+                CategoryUid = productRequest.CategoryUid,
                 UserId = user.Id
             };
 
@@ -79,17 +79,35 @@ namespace MebelMarket.Controllers.V1
 
         [CustomAuthorize]
         [HttpPut(ApiRoutes.Shared.Update)]
-        public IActionResult UpdateAsync([FromBody] ProductPostRequest productRequest)
+        public async Task<IActionResult> UpdateAsync([FromBody] ProductPostRequest productRequest)
         {
-            return View();
+            var product = new Product
+            {
+                Uid = productRequest.Uid,
+                Name = productRequest.Name,
+                Description = productRequest.Description,
+                Price = productRequest.Price,
+                CategoryUid = productRequest.CategoryUid,
+            };
+
+            int updateResult = await _productsRepository.UpdateAsync(product);
+
+            if (updateResult == 0)
+                return BadRequest(new DataResponse(null, new[] { "Error while updating the product" }));
+
+            return Ok();
         }
 
 
         [CustomAuthorize]
         [HttpDelete(ApiRoutes.Shared.Delete)]
-        public async Task<IActionResult> DeleteAsync(string id)
+        public async Task<IActionResult> DeleteAsync(string uid)
         {
-            await _productsRepository.DeleteAsync(id);
+            int deleteResult = await _productsRepository.DeleteAsync(uid);
+
+            if (deleteResult == 0)
+                return BadRequest(new DataResponse(null, new[] { "Error while deleting the product" }));
+
             return Ok();
         }
     }

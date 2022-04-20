@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MebelMarket.DAL.Repository.Dapper
 {
-    public class ProductsRepository : IProductsRepository
+    public class CategoriesRepository : ICategoriesRepository
     {
         private readonly ConnectionHelper _connectionHelper;
 
-        public ProductsRepository(ConnectionHelper connectionHelper)
+        public CategoriesRepository(ConnectionHelper connectionHelper)
         {
             _connectionHelper = connectionHelper;
         }
@@ -31,17 +31,17 @@ namespace MebelMarket.DAL.Repository.Dapper
             }
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync()
+        public async Task<IEnumerable<Category>> GetAllAsync()
         {
             using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
             {
                 var sql = "SELECT * FROM [dbo].[Products] ORDER BY [CreationDate] DESK";
 
-                return await cnn.QueryAsync<Product>(sql, commandType: CommandType.Text);
+                return await cnn.QueryAsync<Category>(sql, commandType: CommandType.Text);
             }
         }
 
-        public async Task<Product> GetByIdAsync(string uid)
+        public async Task<Category> GetByIdAsync(string uid)
         {
             using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
             {
@@ -50,11 +50,11 @@ namespace MebelMarket.DAL.Repository.Dapper
 
                 var sql = "SELECT * FROM [dbo].[Products] WHERE [uid] = @uid";
 
-                return await cnn.QueryFirstOrDefaultAsync<Product>(sql, parameters, commandType: CommandType.Text);
+                return await cnn.QueryFirstOrDefaultAsync<Category>(sql, parameters, commandType: CommandType.Text);
             }
         }
 
-        public async Task<int> InsertAsync(Product entity)
+        public async Task<int> InsertAsync(Category entity)
         {
             using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
             {
@@ -64,7 +64,7 @@ namespace MebelMarket.DAL.Repository.Dapper
             }
         }
 
-        public async Task<int> UpdateAsync(Product entity)
+        public async Task<int> UpdateAsync(Category entity)
         {
             using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
             {
@@ -73,29 +73,5 @@ namespace MebelMarket.DAL.Repository.Dapper
                 return await cnn.ExecuteAsync(sql, entity, commandType: CommandType.Text);
             }
         }
-
-        //private async Task<IEnumerable<Article>> QueryWithMappingAsync(IDbConnection cnn, string sql, DynamicParameters parameters)
-        //{
-        //    var articleDictionary = new Dictionary<string, Article>();
-
-        //    return (await cnn.QueryAsync<Article, Category, Article>(
-        //                sql,
-        //                (article, category) =>
-        //                {
-        //                    if (!articleDictionary.TryGetValue(article.uid, out var articleEntry))
-        //                    {
-        //                        articleEntry = article;
-        //                        articleEntry.Categories = new List<Category>();
-        //                        articleDictionary.Add(article.uid, articleEntry);
-        //                    }
-
-        //                    articleEntry.Categories = articleEntry.Categories.Append(category);
-        //                    return articleEntry;
-        //                },
-        //                parameters,
-        //                splitOn: "uid"
-        //                ))
-        //                .Distinct();
-        //}
     }
 }
