@@ -5,6 +5,12 @@ const routes = [
     path: '/',
     name: 'Home',
     component: () => import("@/views/Home.vue")
+  },
+  {
+    path: '/account/authentication/:formName',
+    name: 'Authentication',
+    component: () => import("@/views/Auth.vue"),
+    props: true
   }
 ]
 
