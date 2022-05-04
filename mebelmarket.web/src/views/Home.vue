@@ -170,7 +170,44 @@
 
 <script>
 
+  import { useMeta } from 'vue-meta'
+  import axios from 'axios'
+
   export default {
+    setup () {
+      useMeta({
+        title: 'Все объявления'
+      })
+    },
+
+    data() {
+      return {
+        announcements: [],
+        errors: []
+      }
+    },
+
+    created() {
+      this.fetchAnnouncements();
+    },
+
+    methods: {
+      fetchAnnouncements() {
+
+        let url = this.createRoute("Products", "All");
+
+        axios
+          .get(url, { headers: this.generateDeafaultHeaders() })
+          .then(response => {
+            this.announcements = response.data.Data;
+          })
+          .catch(error => {
+            if (error.response) {
+              this.errors = error.response.data.errors ?? [];
+            }
+          })
+      }
+    }
   }
 
 </script>

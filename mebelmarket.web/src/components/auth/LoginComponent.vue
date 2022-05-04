@@ -97,17 +97,14 @@
         axios
           .post(url, requestData, { headers: this.generateDeafaultHeaders() })
           .then(response => {
-            console.log(response);
             localStorage.token = response.data.token;
           })
           .catch(error => {
-            console.log(error);
             if (error.response) {
               this.errors = error.response.data.errors;
             }
           })
       }
-
     }
   }
 

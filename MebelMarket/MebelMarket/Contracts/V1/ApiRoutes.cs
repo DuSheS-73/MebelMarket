@@ -18,5 +18,11 @@
             internal const string Register = "Register";
             internal const string Login = "Login";
         }
+
+        internal static class Products
+        {
+            internal const string GetAllInCategory = "AllInCategory/{categoryUid}";
+            internal const string Login = "Login";
+        }
     }
 }

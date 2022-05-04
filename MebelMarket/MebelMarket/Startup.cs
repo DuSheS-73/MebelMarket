@@ -47,6 +47,8 @@ namespace MebelMarket
 
             app.UseRouting();
 
+            app.UseCors("AllowSpecificOrigin");
+
             app.UseAuthorization();
 
             app.UseMiddleware<JwtMiddleware>();

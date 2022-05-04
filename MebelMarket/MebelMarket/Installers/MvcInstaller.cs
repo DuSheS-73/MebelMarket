@@ -13,6 +13,14 @@ namespace MebelMarket.Installers
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MebelMarket", Version = "v1" });
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    "AllowSpecificOrigin",
+                    builder => builder.WithOrigins("http://localhost:8080").AllowAnyHeader().AllowAnyMethod()
+                );
+            });
         }
     }
 }

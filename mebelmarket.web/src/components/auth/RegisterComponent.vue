@@ -12,13 +12,27 @@
 
 		<div class="row mb-3">
 			<div class="col">
-				<label for="userName">Логин <span class="text-danger">*</span></label>
+				<label for="name">Имя <span class="text-danger">*</span></label>
 				<input 
 					type="text" 
-					name="userName" 
-					id="userName"
+					name="name" 
+					id="name"
 					class="form-control"
-					v-model="userName"
+					v-model="name"
+					>
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col">
+				<label for="surname">Фамилия <span class="text-danger">*</span></label>
+				<input 
+					type="text" 
+					name="surname" 
+					id="surname"
+					class="form-control"
+					v-model="surname"
+					placeholder=""
 					>
 			</div>
 		</div>
@@ -32,7 +46,21 @@
 					id="email"
 					class="form-control"
 					v-model="email"
-					placeholder="example@email.com" 
+					placeholder="" 
+					>
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col">
+				<label for="phone">Телефон <span class="text-danger">*</span></label>
+				<input 
+					type="text" 
+					name="phone" 
+					id="phone"
+					class="form-control"
+					v-model="phone"
+					placeholder="" 
 					>
 			</div>
 		</div>
@@ -52,7 +80,7 @@
 						placeholder="Не менее 8 символов" 
 						>
 
-					<i class="far password-eye" 
+					<i class="fa password-eye" 
 						:class="eyeClass" 
 						@click="showPassword = !showPassword"></i>
 				</div>
@@ -75,7 +103,7 @@
 						v-model="passwordConfirmation"
 						>
 
-					<i class="far password-eye" 
+					<i class="fa password-eye" 
 						:class="eyeClass" 
 						@click="showPassword = !showPassword"></i>
 				</div>
@@ -107,8 +135,10 @@
 
 		data() {
 			return {
+				name: "",
+				surname: "",
 				email: "",
-				userName: "",
+				phone: "",
 				password: "",
 				passwordConfirmation: "",
 				errors: [],
@@ -164,20 +194,11 @@
 		methods: {
 			register() {
 
+				// clear the errors
 				this.errors.splice(0);
 
 				if (this.password !== this.passwordConfirmation) {
 					this.errors.push("Пароли не совпадают");
-					return;
-				}
-
-				if (
-					this.email.split(' ').join('') == "" ||
-					this.userName.split(' ').join('') == "" ||
-					this.password == "" ||
-					this.passwordConfirmation == ""
-				) {
-					this.errors.push("Заполните все поля");
 					return;
 				}
 
@@ -193,10 +214,8 @@
 				.post(url, registerRequest, { headers: this.generateHeaders() })
 				.then(response => {
 					localStorage.token = response.data.token;
-					localStorage.refreshToken = response.data.refreshToken;
-					localStorage.authenticated = true;
 					
-					this.$router.push({path: this.$parent.returnUrl ?? "/articles/main/page/1"});
+					//this.$router.push({path: this.$parent.returnUrl ?? "/articles/main/page/1"});
 				})
 				.catch(error => {
 					if (error.response) {

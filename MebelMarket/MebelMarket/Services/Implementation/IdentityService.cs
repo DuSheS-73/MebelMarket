@@ -74,7 +74,7 @@ namespace MebelMarket.Services.Implementation
             if (!createResult.Succeeded)
                 return new AuthenticationResult(createResult.Errors.Select(x => x.Description));
 
-            var addToRoleResult = await _userManager.AddToRoleAsync(user, "Owner");
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, "User");
 
             if (!addToRoleResult.Succeeded)
                 return new AuthenticationResult(addToRoleResult.Errors.Select(x => x.Description));

@@ -37,6 +37,18 @@ namespace MebelMarket.Controllers.V1
         }
 
 
+        [HttpGet(ApiRoutes.Products.GetAllInCategory)]
+        public async Task<IActionResult> GetAllAsync(string categoryUid, [FromQuery] int currentPage = 1, [FromQuery] int pageSize = Int32.MaxValue)
+        {
+            IEnumerable<Product> products = await _productsRepository.GetAllAsync();
+
+            if (products == null || products.Count() == 0)
+                return BadRequest(new DataResponse(null, new[] { "No products found" }));
+
+            return Ok(new DataResponse(products, null));
+        }
+
+
         [HttpGet(ApiRoutes.Shared.Get)]
         public async Task<IActionResult> GetAsync(string uid)
         {

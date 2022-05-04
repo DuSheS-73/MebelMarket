@@ -35,10 +35,15 @@ namespace MebelMarket.DAL.Repository.Dapper
         {
             using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
             {
-                var sql = "SELECT * FROM [dbo].[Products] ORDER BY [CreationDate] DESK";
+                var sql = "SELECT * FROM [dbo].[Products] ORDER BY [CreationDate] DESC";
 
                 return await cnn.QueryAsync<Product>(sql, commandType: CommandType.Text);
             }
+        }
+
+        public Task<IEnumerable<Product>> GetAllInCategoryAsync(string categoryUid, int currentPage = 1, int pageSize = int.MaxValue)
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task<Product> GetByIdAsync(string uid)
