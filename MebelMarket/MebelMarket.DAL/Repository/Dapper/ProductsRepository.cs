@@ -2,9 +2,11 @@
 using MebelMarket.DAL.EntityModels;
 using MebelMarket.DAL.Helpers;
 using MebelMarket.DAL.Repository.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MebelMarket.DAL.Repository.Dapper
@@ -41,9 +43,21 @@ namespace MebelMarket.DAL.Repository.Dapper
             }
         }
 
-        public Task<IEnumerable<Product>> GetAllInCategoryAsync(string categoryUid, int currentPage = 1, int pageSize = int.MaxValue)
+        public async Task<IEnumerable<Product>> GetAllInCategoryAsync(string categoryUid, int currentPage = 1, int pageSize = int.MaxValue)
         {
-            throw new System.NotImplementedException();
+            using (IDbConnection cnn = new SqlConnection(_connectionHelper.CnnVal))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@CategoryUid", categoryUid);
+
+                var sb = new StringBuilder("SELECT * FROM [dbo].[Products] ");
+                sb.Append("WHERE [CategoryUid] = @CategoryUid ORDER BY [CreationDate] DESC ");
+                sb.Append("OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY", Math.Abs((currentPage - 1) * pageSize), Math.Abs(pageSize));
+
+                var sql = sb.ToString();
+
+                return await cnn.QueryAsync<Product>(sql, parameters, commandType: CommandType.Text);
+            }
         }
 
         public async Task<Product> GetByIdAsync(string uid)

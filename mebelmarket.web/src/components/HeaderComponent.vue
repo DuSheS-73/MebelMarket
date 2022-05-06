@@ -23,10 +23,16 @@
                             <ul>
                                 <li class="active"><router-link :to="{name:'Home'}">все объявления</router-link></li>
                                 <li><a href="about.html">по категориям</a></li>
-                                <li class="menu-btn">
+
+                                <li v-if="authenticated" class="menu-btn">
+                                    <router-link :to="{name:'Account'}" class="login">личный кабинет</router-link>
+                                    <a class="template-btn" @click.prevent="signOut">выйти</a>
+                                </li>
+                                <li v-else class="menu-btn">
                                     <router-link :to="{name:'Authentication', params:{formName:'register'}}" class="login">зарегистрироваться</router-link>
                                     <router-link :to="{name:'Authentication', params:{formName:'login'}}" class="template-btn">войти</router-link>
                                 </li>
+
                             </ul>
                         </div>
                     </div>
@@ -49,6 +55,26 @@
 <script>
 	
 	export default {
+
+        data() {
+          return {
+            authenticated: false
+          }
+        },
+
+        created() {
+            //window.addEventListener("resize", this.onResize);
+            this.authenticated = localStorage.authenticated == 'true';
+        },
+
+        methods: {
+          signOut() {
+            localStorage.token = null;
+            localStorage.authenticated = false;
+
+            this.authenticated = false;
+          }
+        }
 	}
 
 </script>

@@ -27,12 +27,12 @@ namespace MebelMarket.Middleware
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
             if (token != null)
-                AttachUserToContext(context, identityService, token);
+                await AttachUserToContextAsync(context, identityService, token);
 
             await _next(context);
         }
 
-        private void AttachUserToContext(HttpContext context, IIdentityService identitytService, string token)
+        private async Task AttachUserToContextAsync(HttpContext context, IIdentityService identitytService, string token)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace MebelMarket.Middleware
                 var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
 
                 // attach user to context on successful jwt validation
-                context.Items["User"] = identitytService.GetUserByIdAsync(userId);
+                context.Items["User"] = await identitytService.GetUserByIdAsync(userId);
             }
             catch
             {

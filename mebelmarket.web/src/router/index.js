@@ -11,6 +11,25 @@ const routes = [
     name: 'Authentication',
     component: () => import("@/views/Auth.vue"),
     props: true
+  },
+
+  {
+    path: '/account/',
+    name: 'Account',
+    component: () => import("@/views/Account.vue")
+  },
+
+  {
+    path: '/product/:uid',
+    name: 'Product',
+    component: () => import("@/views/Products/Index.vue"),
+    props: true
+  },
+  {
+    path: '/product/edit/:uid?',
+    name: 'EditProduct',
+    component: () => import("@/views/Products/Edit.vue"),
+    props: true
   }
 ]
 

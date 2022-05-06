@@ -98,6 +98,9 @@
           .post(url, requestData, { headers: this.generateDeafaultHeaders() })
           .then(response => {
             localStorage.token = response.data.token;
+            localStorage.authenticated = true;
+
+            this.$router.push({path: this.$parent.returnUrl ?? "/"});
           })
           .catch(error => {
             if (error.response) {

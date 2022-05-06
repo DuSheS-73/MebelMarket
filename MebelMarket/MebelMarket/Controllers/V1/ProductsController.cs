@@ -40,10 +40,10 @@ namespace MebelMarket.Controllers.V1
         [HttpGet(ApiRoutes.Products.GetAllInCategory)]
         public async Task<IActionResult> GetAllAsync(string categoryUid, [FromQuery] int currentPage = 1, [FromQuery] int pageSize = Int32.MaxValue)
         {
-            IEnumerable<Product> products = await _productsRepository.GetAllAsync();
+            IEnumerable<Product> products = await _productsRepository.GetAllInCategoryAsync(categoryUid, currentPage, pageSize);
 
             if (products == null || products.Count() == 0)
-                return BadRequest(new DataResponse(null, new[] { "No products found" }));
+                return BadRequest(new DataResponse(null, new[] { "Не найдено ни одного объявления" }));
 
             return Ok(new DataResponse(products, null));
         }
@@ -55,7 +55,7 @@ namespace MebelMarket.Controllers.V1
             Product product = await _productsRepository.GetByIdAsync(uid);
 
             if (product == null)
-                return BadRequest(new DataResponse(null, new[] { "Product not found" }));
+                return BadRequest(new DataResponse(null, new[] { "Объявление не найдено" }));
 
             return Ok(new DataResponse(product, null));
         }
@@ -76,9 +76,12 @@ namespace MebelMarket.Controllers.V1
                 UserId = user.Id
             };
 
-            await _productsRepository.InsertAsync(product);
+            int insertResult = await _productsRepository.InsertAsync(product);
 
-            return View();
+            if (insertResult <= 0)
+                return BadRequest(new DataResponse(null, new[] { "Возникли ошибки при попытке создать объявления" }));
+
+            return Ok(new DataResponse("Объявление успешно создано", null));
         }
 
 
@@ -98,7 +101,7 @@ namespace MebelMarket.Controllers.V1
             int updateResult = await _productsRepository.UpdateAsync(product);
 
             if (updateResult == 0)
-                return BadRequest(new DataResponse(null, new[] { "Error while updating the product" }));
+                return BadRequest(new DataResponse(null, new[] { "Возникли ошибки при попытке обновить объявление" }));
 
             return Ok();
         }
@@ -111,7 +114,7 @@ namespace MebelMarket.Controllers.V1
             int deleteResult = await _productsRepository.DeleteAsync(uid);
 
             if (deleteResult == 0)
-                return BadRequest(new DataResponse(null, new[] { "Error while deleting the product" }));
+                return BadRequest(new DataResponse(null, new[] { "Возникли ошибки при попытке удалить объявление" }));
 
             return Ok();
         }

@@ -1,6 +1,6 @@
 <template>
 	<div id="templateWrapper">
-		<Header />
+		<Header :key="$route.path"/>
 
 		<router-view :key="$route.path"/>
 		

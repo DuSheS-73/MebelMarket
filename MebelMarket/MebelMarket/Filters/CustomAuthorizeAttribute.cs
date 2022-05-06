@@ -11,7 +11,15 @@ namespace MebelMarket.Filters
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            ApplicationUser user = (ApplicationUser)context.HttpContext.Items["User"];
+            ApplicationUser user = null;
+
+            try
+            {
+                user = (ApplicationUser)context.HttpContext.Items["User"];
+            }
+            catch (Exception ex)
+            {
+            }
 
             if (user == null)
             {
